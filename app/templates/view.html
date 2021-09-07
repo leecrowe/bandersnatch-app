@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="heading">Dynamic Monster Viewer</h1>
+    <h2 class="highlight">Interactive Graph of Live Data</h2>
+    {% if total > 0 %}
+        <form id="form" method="post" action="{{ url_for('view') }}">
+            <p><label>Filter:
+                <select name="filter_by">
+                    {% for op in rarity_options %}
+                        {% if op == rarity %}
+                            <option selected="selected">{{ op }}</option>
+                        {% else %}
+                            <option>{{ op }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label></p>
+            <p><label>X-axis:
+                <select name="x-axis">
+                    {% for op in options %}
+                        {% if op == x_axis %}
+                            <option selected="selected">{{ op }}</option>
+                        {% else %}
+                            <option>{{ op }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label></p>
+            <p><label>Y-axis:
+                <select name="y-axis">
+                    {% for op in options %}
+                        {% if op == y_axis %}
+                            <option selected="selected">{{ op }}</option>
+                        {% else %}
+                            <option>{{ op }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label></p>
+            <p><label>Target:
+                <select name="target">
+                    {% for op in target_options %}
+                        {% if op == target %}
+                            <option selected="selected">{{ op }}</option>
+                        {% else %}
+                            <option>{{ op }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label></p>
+            <button type="submit" id="submit" name="submit">Generate Chart
+            </button>
+            <br class="clear"/>
+        </form>
+        <div id="chart">
+            <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+            <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.8.1"></script>
+            <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.0.0"></script>
+            <div id="graph"></div>
+            <script type="text/javascript">
+                vegaEmbed('#graph', {{ spec | safe }});
+            </script>
+        </div>
+        <br>
+        <h3>Total Monsters: <span class="highlight">{{ total }}</span></h3>
+        {{ df_table | safe }}
+    {% else %}
+        <h3>Total Monsters: <span class="highlight">{{ total }}</span></h3>
+    {% endif %}
+{% endblock %}
